@@ -1,0 +1,14 @@
+{
+  "creatures": [
+    {
+      "id": "square1",
+      "name": "Square 1",
+      "image": "/images/square1.svg"
+    },
+    {
+      "id": "square5",
+      "name": "Square 5",
+      "image": "/images/square2.svg"
+    }
+  ]
+} 

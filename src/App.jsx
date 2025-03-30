@@ -2,25 +2,9 @@ import { useState, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import './App.css'
 
-// Card type configurations
-const CARD_TYPES = [
-  {
-    id: 'square1',
-    name: 'Square 1',
-    image: reactLogo,
-    width: 120
-  },
-  {
-    id: 'square2',
-    name: 'Square 2',
-    image: reactLogo,
-    width: 120
-  }
-];
-
-const CARD_SPACING = 40; // Increased spacing between cards
-const INITIAL_X = 20; // Initial x position
-const INITIAL_Y = window.innerHeight - 160 + (160 - 120) / 2; // Center vertically in bottom bar
+const CARD_SPACING = 40;
+const INITIAL_X = 20;
+const INITIAL_Y = window.innerHeight - 160 + (160 - 120) / 2;
 const BOTTOM_BAR_HEIGHT = 160;
 
 // Card dimensions
@@ -46,44 +30,72 @@ function Card({ id, image, name, position, onMouseDown, isColliding }) {
 }
 
 function App() {
-  const [cards, setCards] = useState([
-    {
-      id: 'square1-1',
-      typeId: 'square1',
-      image: CARD_TYPES[0].image,
-      name: CARD_TYPES[0].name,
-      position: { 
-        x: INITIAL_X,
-        y: INITIAL_Y
-      },
-      isOriginal: true
-    },
-    {
-      id: 'square2-1',
-      typeId: 'square2',
-      image: CARD_TYPES[1].image,
-      name: CARD_TYPES[1].name,
-      position: { 
-        x: INITIAL_X + CARD_TYPES[0].width + CARD_SPACING,
-        y: INITIAL_Y
-      },
-      isOriginal: true
-    }
-  ]);
+  const [cards, setCards] = useState([]);
+  const [creatures, setCreatures] = useState([]);
+  const [combinations, setCombinations] = useState({});
   const [draggedCardId, setDraggedCardId] = useState(null);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
+  // Load creatures and combinations from server
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [creaturesResponse, combinationsResponse] = await Promise.all([
+          fetch('http://localhost:3001/api/creatures'),
+          fetch('http://localhost:3001/api/combinations')
+        ]);
+
+        if (!creaturesResponse.ok || !combinationsResponse.ok) {
+          throw new Error('Failed to fetch data');
+        }
+
+        const creaturesData = await creaturesResponse.json();
+        const combinationsData = await combinationsResponse.json();
+
+        setCreatures(creaturesData);
+        setCombinations(combinationsData);
+
+        // Initialize cards with the first two creatures
+        if (creaturesData.length >= 2) {
+          setCards([
+            {
+              id: `${creaturesData[0].id}-1`,
+              typeId: creaturesData[0].id,
+              image: creaturesData[0].image,
+              name: creaturesData[0].name,
+              position: { 
+                x: INITIAL_X,
+                y: INITIAL_Y
+              },
+              isOriginal: true
+            },
+            {
+              id: `${creaturesData[1].id}-1`,
+              typeId: creaturesData[1].id,
+              image: creaturesData[1].image,
+              name: creaturesData[1].name,
+              position: { 
+                x: INITIAL_X + CARD_WIDTH + CARD_SPACING,
+                y: INITIAL_Y
+              },
+              isOriginal: true
+            }
+          ]);
+        }
+      } catch (error) {
+        console.error('Error loading data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const checkCollision = (card1, card2) => {
-    const container = document.querySelector('.app-container');
-    const containerRect = container.getBoundingClientRect();
-    
-    // Only check collision if both cards are above the bottom bar
-    if (card1.position.y > containerRect.height - BOTTOM_BAR_HEIGHT ||
-        card2.position.y > containerRect.height - BOTTOM_BAR_HEIGHT) {
+    if (card1.position.y > window.innerHeight - BOTTOM_BAR_HEIGHT ||
+        card2.position.y > window.innerHeight - BOTTOM_BAR_HEIGHT) {
       return false;
     }
 
-    // Calculate the actual visible boundaries of each card
     const card1Right = card1.position.x + CARD_VISIBLE_WIDTH;
     const card1Left = card1.position.x + CARD_PADDING;
     const card2Right = card2.position.x + CARD_VISIBLE_WIDTH;
@@ -97,7 +109,6 @@ function App() {
     const card = cards.find(c => c.id === cardId);
     if (!card) return;
     
-    // If dragging an original card, create a copy
     if (card.isOriginal) {
       const newCard = {
         ...card,
@@ -145,17 +156,6 @@ function App() {
   };
 
   const handleMouseUp = () => {
-    if (draggedCardId) {
-      const container = document.querySelector('.app-container');
-      const containerRect = container.getBoundingClientRect();
-      const draggedCard = cards.find(card => card.id === draggedCardId);
-      
-      // Only remove if the card is in the bottom bar and not an original card
-      if (draggedCard && !draggedCard.isOriginal && 
-          draggedCard.position.y > containerRect.height - BOTTOM_BAR_HEIGHT) {
-        setCards(prevCards => prevCards.filter(card => card.id !== draggedCardId));
-      }
-    }
     setDraggedCardId(null);
   };
 
@@ -175,7 +175,6 @@ function App() {
     };
   }, [draggedCardId, dragStart]);
 
-  // Calculate collisions for each card
   const cardCollisions = cards.map(card => {
     const isColliding = cards.some(otherCard => 
       card.id !== otherCard.id && checkCollision(card, otherCard)
