@@ -21,89 +21,39 @@
       "image": "/images/square4.svg"
     },
     {
-      "id": "retrieverador",
-      "name": "Retrieverador",
-      "image": "https://api.dicebear.com/7.x/bottts/svg?seed=Retrieverador"
+      "id": "labrador-double-doodle",
+      "name": "Labrador Double-Doodle",
+      "image": "images/labrador-double-doodle-7d2afda5-2926-4279-88eb-625b30e289eb.png"
     },
     {
-      "id": "retrieverador-retriever",
-      "name": "Retrieverador Retriever",
-      "image": "https://api.dicebear.com/7.x/bottts/svg?seed=Retrieverador Retriever"
+      "id": "salamon",
+      "name": "Salamon",
+      "image": "images/salamon-8c682105-fa7d-4142-a4eb-6badf6b39aaa.png"
     },
     {
-      "id": "labrador-double-retriever",
-      "name": "Labrador Double Retriever",
-      "image": "https://api.dicebear.com/7.x/bottts/svg?seed=Labrador Double Retriever"
+      "id": "labramer",
+      "name": "Labramer",
+      "image": "images/labramer-f68eca8a-565b-4499-90fa-3f3c4f782401.png"
     },
     {
-      "id": "goldenador",
-      "name": "Goldenador",
-      "image": "https://api.dicebear.com/7.x/bottts/svg?seed=Goldenador"
+      "id": "salamonella",
+      "name": "Salamonella",
+      "image": "images/salamonella-9644fcf7-86de-4fcd-8f3d-b385602ffef0.png"
     },
     {
-      "id": "retrieveradorador",
-      "name": "Retrieveradorador",
-      "image": "https://api.dicebear.com/7.x/bottts/svg?seed=Retrieveradorador"
+      "id": "labramonella",
+      "name": "Labramonella",
+      "image": "images/labramonella-a8c2b0a5-96cd-4035-b5fb-f18f795d4d73.png"
     },
     {
-      "id": "goldenadorgolden",
-      "name": "Goldenadorgolden",
-      "image": "https://api.dicebear.com/7.x/bottts/svg?seed=Goldenadorgolden"
+      "id": "labraneagle",
+      "name": "Labraneagle",
+      "image": "images/labraneagle-33999f51-dab9-4bfb-aae4-e01e7cf48162.png"
     },
     {
-      "id": "retrievengoldornado",
-      "name": "Retrievengoldornado",
-      "image": "https://api.dicebear.com/7.x/bottts/svg?seed=Retrievengoldornado"
-    },
-    {
-      "id": "retrieveradoradorador",
-      "name": "Retrieveradoradorador",
-      "image": "https://api.dicebear.com/7.x/bottts/svg?seed=Retrieveradoradorador"
-    },
-    {
-      "id": "retrieveradoradoradorador",
-      "name": "Retrieveradoradoradorador",
-      "image": "https://api.dicebear.com/7.x/bottts/svg?seed=Retrieveradoradoradorador"
-    },
-    {
-      "id": "retrievadoradorador",
-      "name": "Retrievadoradorador",
-      "image": "https://api.dicebear.com/7.x/bottts/svg?seed=Retrievadoradorador"
-    },
-    {
-      "id": "retrievadadrador",
-      "name": "Retrievadadrador",
-      "image": "https://api.dicebear.com/7.x/bottts/svg?seed=Retrievadadrador"
-    },
-    {
-      "id": "retrieverador-double",
-      "name": "Retrieverador Double",
-      "image": "https://api.dicebear.com/7.x/bottts/svg?seed=Retrieverador Double"
-    },
-    {
-      "id": "quadro-retriever",
-      "name": "Quadro Retriever",
-      "image": "https://api.dicebear.com/7.x/bottts/svg?seed=Quadro Retriever"
-    },
-    {
-      "id": "labradaimese",
-      "name": "Labradaimese",
-      "image": "https://api.dicebear.com/7.x/bottts/svg?seed=Labradaimese"
-    },
-    {
-      "id": "bald-retreagle",
-      "name": "Bald Retreagle",
-      "image": "https://api.dicebear.com/7.x/bottts/svg?seed=Bald Retreagle"
-    },
-    {
-      "id": "bald-eagletarian",
-      "name": "Bald Eagletarian",
-      "image": "https://api.dicebear.com/7.x/bottts/svg?seed=Bald Eagletarian"
-    },
-    {
-      "id": "bald-retrievaglet",
-      "name": "Bald Retrievaglet",
-      "image": "https://api.dicebear.com/7.x/bottts/svg?seed=Bald Retrievaglet"
+      "id": "labraquille",
+      "name": "Labraquille",
+      "image": "images/labraquille-e600cd08-1b0b-4b19-ba44-26af8fdc4964.png"
     }
   ]
 }

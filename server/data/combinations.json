@@ -1,156 +1,66 @@
 {
   "combinations": [
     {
-      "key": "retrieverador",
+      "key": "labrador-double-doodle",
       "card1_id": "labrador-retriever",
       "card2_id": "labrador-retriever",
       "result": {
-        "name": "Retrieverador",
-        "image": "https://api.dicebear.com/7.x/bottts/svg?seed=Retrieverador"
+        "name": "Labrador Double-Doodle",
+        "image": "images/labrador-double-doodle-7d2afda5-2926-4279-88eb-625b30e289eb.png"
       }
     },
     {
-      "key": "retrieverador-retriever",
-      "card1_id": "retrieverador",
-      "card2_id": "labrador-retriever",
+      "key": "salamon",
+      "card1_id": "salmon",
+      "card2_id": "salmon",
       "result": {
-        "name": "Retrieverador Retriever",
-        "image": "https://api.dicebear.com/7.x/bottts/svg?seed=Retrieverador Retriever"
+        "name": "Salamon",
+        "image": "images/salamon-8c682105-fa7d-4142-a4eb-6badf6b39aaa.png"
       }
     },
     {
-      "key": "labrador-double-retriever",
+      "key": "labramer",
       "card1_id": "labrador-retriever",
-      "card2_id": "labrador-retriever",
+      "card2_id": "salamon",
       "result": {
-        "name": "Labrador Double Retriever",
-        "image": "https://api.dicebear.com/7.x/bottts/svg?seed=Labrador Double Retriever"
+        "name": "Labramer",
+        "image": "images/labramer-f68eca8a-565b-4499-90fa-3f3c4f782401.png"
       }
     },
     {
-      "key": "goldenador",
-      "card1_id": "retrieverador",
-      "card2_id": "retrieverador",
+      "key": "salamonella",
+      "card1_id": "salmon",
+      "card2_id": "salamon",
       "result": {
-        "name": "Goldenador",
-        "image": "https://api.dicebear.com/7.x/bottts/svg?seed=Goldenador"
+        "name": "Salamonella",
+        "image": "images/salamonella-9644fcf7-86de-4fcd-8f3d-b385602ffef0.png"
       }
     },
     {
-      "key": "retrieveradorador",
-      "card1_id": "retrieverador-retriever",
-      "card2_id": "retrieverador-retriever",
+      "key": "labramonella",
+      "card1_id": "labramer",
+      "card2_id": "salamonella",
       "result": {
-        "name": "Retrieveradorador",
-        "image": "https://api.dicebear.com/7.x/bottts/svg?seed=Retrieveradorador"
+        "name": "Labramonella",
+        "image": "images/labramonella-a8c2b0a5-96cd-4035-b5fb-f18f795d4d73.png"
       }
     },
     {
-      "key": "goldenadorgolden",
-      "card1_id": "goldenador",
-      "card2_id": "goldenador",
-      "result": {
-        "name": "Goldenadorgolden",
-        "image": "https://api.dicebear.com/7.x/bottts/svg?seed=Goldenadorgolden"
-      }
-    },
-    {
-      "key": "retrievengoldornado",
-      "card1_id": "retrieverador",
-      "card2_id": "goldenadorgolden",
-      "result": {
-        "name": "Retrievengoldornado",
-        "image": "https://api.dicebear.com/7.x/bottts/svg?seed=Retrievengoldornado"
-      }
-    },
-    {
-      "key": "retrieveradoradorador",
-      "card1_id": "retrieveradorador",
-      "card2_id": "retrieveradorador",
-      "result": {
-        "name": "Retrieveradoradorador",
-        "image": "https://api.dicebear.com/7.x/bottts/svg?seed=Retrieveradoradorador"
-      }
-    },
-    {
-      "key": "retrieveradoradoradorador",
-      "card1_id": "retrieveradoradorador",
-      "card2_id": "retrieveradoradorador",
-      "result": {
-        "name": "Retrieveradoradoradorador",
-        "image": "https://api.dicebear.com/7.x/bottts/svg?seed=Retrieveradoradoradorador"
-      }
-    },
-    {
-      "key": "retrievadoradorador",
-      "card1_id": "retrieveradoradoradorador",
-      "card2_id": "retrieveradoradoradorador",
-      "result": {
-        "name": "Retrievadoradorador",
-        "image": "https://api.dicebear.com/7.x/bottts/svg?seed=Retrievadoradorador"
-      }
-    },
-    {
-      "key": "retrievadadrador",
-      "card1_id": "retrievadoradorador",
-      "card2_id": "retrievadoradorador",
-      "result": {
-        "name": "Retrievadadrador",
-        "image": "https://api.dicebear.com/7.x/bottts/svg?seed=Retrievadadrador"
-      }
-    },
-    {
-      "key": "retrieverador-double",
-      "card1_id": "retrieverador-retriever",
-      "card2_id": "labrador-double-retriever",
-      "result": {
-        "name": "Retrieverador Double",
-        "image": "https://api.dicebear.com/7.x/bottts/svg?seed=Retrieverador Double"
-      }
-    },
-    {
-      "key": "quadro-retriever",
-      "card1_id": "retrieverador-double",
-      "card2_id": "retrieverador-double",
-      "result": {
-        "name": "Quadro Retriever",
-        "image": "https://api.dicebear.com/7.x/bottts/svg?seed=Quadro Retriever"
-      }
-    },
-    {
-      "key": "labradaimese",
-      "card1_id": "labrador-retriever",
-      "card2_id": "siamese-cat",
-      "result": {
-        "name": "Labradaimese",
-        "image": "https://api.dicebear.com/7.x/bottts/svg?seed=Labradaimese"
-      }
-    },
-    {
-      "key": "bald-retreagle",
+      "key": "labraneagle",
       "card1_id": "bald-eagle",
-      "card2_id": "retrievadadrador",
+      "card2_id": "labramonella",
       "result": {
-        "name": "Bald Retreagle",
-        "image": "https://api.dicebear.com/7.x/bottts/svg?seed=Bald Retreagle"
+        "name": "Labraneagle",
+        "image": "images/labraneagle-33999f51-dab9-4bfb-aae4-e01e7cf48162.png"
       }
     },
     {
-      "key": "bald-eagletarian",
-      "card1_id": "bald-retreagle",
-      "card2_id": "bald-retreagle",
+      "key": "labraquille",
+      "card1_id": "labramonella",
+      "card2_id": "labraneagle",
       "result": {
-        "name": "Bald Eagletarian",
-        "image": "https://api.dicebear.com/7.x/bottts/svg?seed=Bald Eagletarian"
-      }
-    },
-    {
-      "key": "bald-retrievaglet",
-      "card1_id": "retrievadadrador",
-      "card2_id": "bald-eagletarian",
-      "result": {
-        "name": "Bald Retrievaglet",
-        "image": "https://api.dicebear.com/7.x/bottts/svg?seed=Bald Retrievaglet"
+        "name": "Labraquille",
+        "image": "images/labraquille-e600cd08-1b0b-4b19-ba44-26af8fdc4964.png"
       }
     }
   ]

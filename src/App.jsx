@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import reactLogo from './assets/react.svg'
 import './App.css'
 
@@ -11,6 +11,143 @@ const BOTTOM_BAR_HEIGHT = 160;
 const CARD_PADDING = 8;
 const CARD_WIDTH = 80;
 const CARD_VISIBLE_WIDTH = CARD_WIDTH - (CARD_PADDING * 2);
+
+// Add DrawingCanvas component
+function DrawingCanvas({ onSave, onCancel, creatureName }) {
+  const canvasRef = useRef(null);
+  const [isDrawing, setIsDrawing] = useState(false);
+  const [ctx, setCtx] = useState(null);
+  const [lastPos, setLastPos] = useState({ x: 0, y: 0 });
+  const [currentColor, setCurrentColor] = useState('#000000');
+  const [brushSize, setBrushSize] = useState(2);
+
+  const colors = [
+    '#000000', // Black
+    '#FF0000', // Red
+    '#00FF00', // Green
+    '#0000FF', // Blue
+    '#FFFF00', // Yellow
+    '#FF00FF', // Magenta
+    '#00FFFF', // Cyan
+    '#FFA500', // Orange
+    '#800080', // Purple
+    '#008000', // Dark Green
+    '#000080', // Navy Blue
+    '#800000', // Maroon
+  ];
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const context = canvas.getContext('2d');
+    
+    // Set up canvas
+    context.strokeStyle = currentColor;
+    context.lineWidth = brushSize;
+    context.lineCap = 'round';
+    context.lineJoin = 'round';
+    
+    // Only set white background if there's no drawing yet
+    if (!context.getImageData(0, 0, canvas.width, canvas.height).data.some(pixel => pixel !== 0)) {
+      context.fillStyle = '#fff';
+      context.fillRect(0, 0, canvas.width, canvas.height);
+    }
+    
+    setCtx(context);
+  }, [currentColor, brushSize]);
+
+  const startDrawing = (e) => {
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    setIsDrawing(true);
+    setLastPos({ x, y });
+    ctx.beginPath();
+  };
+
+  const draw = (e) => {
+    if (!isDrawing) return;
+    
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    setLastPos({ x, y });
+  };
+
+  const stopDrawing = () => {
+    setIsDrawing(false);
+  };
+
+  const handleSave = () => {
+    const canvas = canvasRef.current;
+    const imageData = canvas.toDataURL('image/png');
+    onSave(imageData);
+  };
+
+  const clearCanvas = () => {
+    const canvas = canvasRef.current;
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  };
+
+  return (
+    <div className="drawing-overlay">
+      <div className="drawing-container">
+        <div className="drawing-header">
+          <h3>Unique Creature Discovered: {creatureName}</h3>
+        </div>
+        <div className="drawing-content">
+          <div className="drawing-tools">
+            <div className="color-palette">
+              {colors.map((color) => (
+                <button
+                  key={color}
+                  className={`color-option ${currentColor === color ? 'selected' : ''}`}
+                  style={{ backgroundColor: color }}
+                  onClick={() => setCurrentColor(color)}
+                />
+              ))}
+              <input
+                type="color"
+                value={currentColor}
+                onChange={(e) => setCurrentColor(e.target.value)}
+                className="color-picker"
+              />
+            </div>
+            <div className="brush-size">
+              <label>Brush Size:</label>
+              <input
+                type="range"
+                min="1"
+                max="20"
+                value={brushSize}
+                onChange={(e) => setBrushSize(Number(e.target.value))}
+              />
+            </div>
+          </div>
+          <canvas
+            ref={canvasRef}
+            width={400}
+            height={400}
+            onMouseDown={startDrawing}
+            onMouseMove={draw}
+            onMouseUp={stopDrawing}
+            onMouseLeave={stopDrawing}
+          />
+        </div>
+        <div className="drawing-buttons">
+          <button onClick={handleSave}>Save Drawing</button>
+          <button onClick={clearCanvas} className="clear-button">Clear Canvas</button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function Card({ id, image, name, position, onMouseDown, isColliding }) {
   return (
@@ -35,6 +172,8 @@ function App() {
   const [combinations, setCombinations] = useState({});
   const [draggedCardId, setDraggedCardId] = useState(null);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [showDrawing, setShowDrawing] = useState(false);
+  const [pendingCombination, setPendingCombination] = useState(null);
 
   // Load creatures and combinations from server
   useEffect(() => {
@@ -59,7 +198,7 @@ function App() {
         const initialCards = creaturesData.map((creature, index) => ({
           id: `${creature.id}-1`,
           typeId: creature.id,
-          image: creature.image,
+          image: `http://localhost:3001/${creature.image}`,
           name: creature.name,
           position: { 
             x: INITIAL_X + (CARD_WIDTH + CARD_SPACING) * index,
@@ -102,11 +241,9 @@ function App() {
 
   const handleCollision = async (card1, card2) => {
     try {
-      // Extract the base ID (remove the timestamp suffix)
       const card1BaseId = card1.typeId;
       const card2BaseId = card2.typeId;
 
-      // Call the combination endpoint
       const response = await fetch('http://localhost:3001/api/combine', {
         method: 'POST',
         headers: {
@@ -124,15 +261,31 @@ function App() {
 
       const combination = await response.json();
 
-      // Calculate the midpoint between the two cards
+      // Check if this is a new combination (no image yet)
+      const isNewCombination = !combination.result.image;
+
+      // Remove the collided cards immediately
+      setCards(prevCards => 
+        prevCards.filter(card => 
+          card.id !== card1.id && card.id !== card2.id
+        )
+      );
+
+      if (isNewCombination) {
+        // For new combinations, show drawing interface and store the combination
+        setPendingCombination(combination);
+        setShowDrawing(true);
+        return;
+      }
+
+      // For existing combinations, create the new card immediately
       const midX = (card1.position.x + card2.position.x) / 2;
       const midY = (card1.position.y + card2.position.y) / 2;
 
-      // Create a new card with the combination result
       const newCard = {
         id: `combined-${Date.now()}`,
-        typeId: combination.key,  // Use the combination key as the typeId
-        image: combination.result.image,
+        typeId: combination.key,
+        image: `http://localhost:3001/${combination.result.image}`,
         name: combination.result.name,
         position: {
           x: midX,
@@ -141,12 +294,8 @@ function App() {
         isOriginal: false
       };
 
-      // Remove only the collided cards and add the new one
-      setCards(prevCards => 
-        [...prevCards.filter(card => 
-          card.id !== card1.id && card.id !== card2.id  // Only remove the two collided cards
-        ), newCard]
-      );
+      // Add the new card
+      setCards(prevCards => [...prevCards, newCard]);
 
       // Check if this combination already exists in the bottom bar
       const existingCombination = cards.find(card => 
@@ -168,7 +317,7 @@ function App() {
           const newCreatureCard = {
             id: `${combination.key}-1`,
             typeId: combination.key,
-            image: combination.result.image,
+            image: `http://localhost:3001/${combination.result.image}`,
             name: combination.result.name,
             position: { 
               x: INITIAL_X + (CARD_WIDTH + CARD_SPACING) * bottomBarCards.length,
@@ -200,7 +349,7 @@ function App() {
       // Remove only the collided cards and add the new one
       setCards(prevCards => 
         [...prevCards.filter(card => 
-          card.id !== card1.id && card.id !== card2.id  // Only remove the two collided cards
+          card.id !== card1.id && card.id !== card2.id
         ), newCard]
       );
     }
@@ -357,8 +506,92 @@ function App() {
     return { id: card.id, isColliding };
   });
 
+  // Add new handler for saving drawings
+  const handleDrawingSave = async (imageData) => {
+    if (!pendingCombination) return;
+
+    try {
+      // Update the combination with the new image
+      const response = await fetch('http://localhost:3001/api/update-combination', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          combination_key: pendingCombination.key,
+          image: imageData
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update combination');
+      }
+
+      // Refresh the creatures list to include the new combination
+      const creaturesResponse = await fetch('http://localhost:3001/api/creatures');
+      if (!creaturesResponse.ok) {
+        throw new Error('Failed to fetch updated creatures');
+      }
+      const creaturesData = await creaturesResponse.json();
+      setCreatures(creaturesData);
+
+      // Find the new creature in the updated list
+      const newCreature = creaturesData.find(c => c.id === pendingCombination.key);
+      if (!newCreature) {
+        throw new Error('New creature not found in updated list');
+      }
+
+      // Count existing cards in the bottom bar
+      const bottomBarCards = cards.filter(card => card.isOriginal);
+      
+      // Add the new creature to the bottom bar
+      const newCreatureCard = {
+        id: `${pendingCombination.key}-1`,
+        typeId: pendingCombination.key,
+        image: `http://localhost:3001/${newCreature.image}`,
+        name: newCreature.name,
+        position: { 
+          x: INITIAL_X + (CARD_WIDTH + CARD_SPACING) * bottomBarCards.length,
+          y: INITIAL_Y
+        },
+        isOriginal: true
+      };
+
+      // Add the combined card at the collision point
+      const combinedCard = {
+        id: `combined-${Date.now()}`,
+        typeId: pendingCombination.key,
+        image: `http://localhost:3001/${newCreature.image}`,
+        name: newCreature.name,
+        position: {
+          x: window.innerWidth / 2 - CARD_WIDTH / 2, // Center of the screen
+          y: window.innerHeight / 2 - CARD_WIDTH / 2
+        },
+        isOriginal: false
+      };
+
+      // Add both cards
+      setCards(prevCards => [...prevCards, newCreatureCard, combinedCard]);
+
+      setShowDrawing(false);
+      setPendingCombination(null);
+    } catch (error) {
+      console.error('Error saving drawing:', error);
+    }
+  };
+
   return (
     <div className="app-container">
+      {showDrawing && (
+        <DrawingCanvas
+          onSave={handleDrawingSave}
+          onCancel={() => {
+            setShowDrawing(false);
+            setPendingCombination(null);
+          }}
+          creatureName={pendingCombination?.result?.name || 'Unknown Creature'}
+        />
+      )}
       <button className="clear-button" onClick={handleClearAll}>Clear All</button>
       {cards
         .filter(card => !card.isOriginal)
@@ -418,12 +651,12 @@ function App() {
                     fontSize: '10px',
                     textAlign: 'center',
                     width: '100%',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
+                    overflow: 'visible',
+                    whiteSpace: 'normal',
                     marginTop: '2px',
                     color: '#333',
-                    pointerEvents: 'none'
+                    pointerEvents: 'none',
+                    wordWrap: 'break-word'
                   }}
                 >
                   {card.name}
